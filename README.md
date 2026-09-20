@@ -1,0 +1,2 @@
+# ad-clicker.github.io
+I RECIEVE MONEY YOU REVIECE DOPAMINE
