@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ad Clicker</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #fff; cursor: pointer; }
+  body { display: flex; align-items: center; justify-content: center; }
+  #count { color: #000; font: 700 20vmin system-ui, sans-serif; user-select: none; }
+</style>
+</head>
+<body>
+<div id="count">0</div>
+<script>
+  const KEY = "clicks";
+  const AD_URL = "https://www.profitableratecpmnetwork.com/p9fsrqu0hu?key=60f9f03ff13f1f51155be44f2d622aa9";
+  const read = () => { try { return parseInt(localStorage.getItem(KEY), 10) || 0; } catch { return 0; } };
+  const count = document.getElementById("count");
+  count.textContent = read();
+
+  document.addEventListener("click", () => {
+    try { localStorage.setItem(KEY, read() + 1); } catch {}
+    window.open(location.href, "_blank");   // new tab: the game
+    location.href = AD_URL;                 // this tab: the ad
+  });
+</script>
+</body>
+</html>
