@@ -14,7 +14,10 @@
 <div id="count">0</div>
 <script>
   const KEY = "clicks";
-  const AD_URL = "https://www.profitableratecpmnetwork.com/fhq8zfz7a?key=6ac9766c449cfeba15716e4dc607dd34";
+  const AD_URLS = [
+    "https://www.profitableratecpmnetwork.com/fhq8zfz7a?key=6ac9766c449cfeba15716e4dc607dd34",
+    "https://omg10.com/4/11850689",
+  ];
   const read = () => { try { return parseInt(localStorage.getItem(KEY), 10) || 0; } catch { return 0; } };
   const count = document.getElementById("count");
   count.textContent = read();
@@ -22,7 +25,7 @@
   document.addEventListener("click", () => {
     try { localStorage.setItem(KEY, read() + 1); } catch {}
     window.open(location.href, "_blank");   // new tab: the game
-    location.href = AD_URL;                 // this tab: the ad
+    location.href = AD_URLS[Math.random() < 0.5 ? 0 : 1]; // this tab: a 50/50 pick of ad
   });
 </script>
   
