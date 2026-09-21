@@ -5,30 +5,111 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ad Clicker</title>
 <style>
-  html, body { margin: 0; height: 100%; background: #fff; cursor: pointer; }
-  body { display: flex; align-items: center; justify-content: center; }
-  #count { color: #000; font: 700 20vmin system-ui, sans-serif; user-select: none; }
+  :root { --green: #22c55e; --green-dark: #16a34a; --card: #141414; --line: #262626; --muted: #a3a3a3; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; background: #0a0a0a; color: #fff; font-family: system-ui, sans-serif; cursor: pointer; }
+  main { max-width: 42rem; margin: 0 auto; padding: 2rem 1rem 3rem; display: flex; flex-direction: column; gap: 1.5rem; }
+  h1 { margin: 0; text-align: center; font-size: 1.4rem; letter-spacing: .15em; text-transform: uppercase; color: var(--green); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 1rem; padding: 1.25rem; }
+  .counter { text-align: center; padding: 2.5rem 1rem; user-select: none; }
+  #count { font-weight: 800; font-size: clamp(4rem, 22vmin, 9rem); line-height: 1; }
+  #count.pop { animation: pop .25s ease-out; }
+  @keyframes pop { 50% { transform: scale(1.12); } }
+  .label { color: var(--muted); text-transform: uppercase; letter-spacing: .2em; font-size: .85rem; margin-top: .5rem; }
+  .cta { margin-top: 1.25rem; font-weight: 700; color: var(--green); animation: blink 1.6s ease-in-out infinite; }
+  @keyframes blink { 50% { opacity: .35; } }
+  .rank { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .rank strong { font-size: 1.15rem; }
+  .rank span { color: var(--muted); font-size: .9rem; }
+  .bar { height: .6rem; background: var(--line); border-radius: 1rem; margin-top: .75rem; overflow: hidden; }
+  .bar div { height: 100%; width: 0; background: var(--green); border-radius: 1rem; transition: width .3s; }
+  h2 { margin: 0 0 .75rem; font-size: 1rem; }
+  ol, ul { margin: 0; padding-left: 1.25rem; color: #d4d4d4; line-height: 1.6; }
+  li + li { margin-top: .4rem; }
+  .ranks { list-style: none; padding: 0; display: grid; gap: .35rem; }
+  .ranks li { display: flex; justify-content: space-between; margin: 0; color: var(--muted); }
+  .ranks li.done { color: #fff; }
+  .ranks li.done::before { content: "\2713 "; color: var(--green); }
+  .fine { color: var(--muted); font-size: .85rem; line-height: 1.5; text-align: center; }
+  footer { display: flex; flex-direction: column; align-items: center; gap: 1rem; padding-bottom: 2rem; }
 </style>
 </head>
 <body>
-<div id="count">0</div>
+<main>
+  <h1>Ad Clicker</h1>
+
+  <section class="card counter">
+    <div id="count">0</div>
+    <div class="label">Ads clicked</div>
+    <div class="cta">Click anywhere to click an ad</div>
+  </section>
+
+  <section class="card">
+    <div class="rank"><strong id="rankName">Rookie</strong><span id="rankNext"></span></div>
+    <div class="bar"><div id="bar"></div></div>
+  </section>
+
+  <section class="card">
+    <h2>How it works</h2>
+    <ol>
+      <li><b>Click anywhere</b> on this page. Anywhere at all, there are no buttons.</li>
+      <li>Your counter goes up by <b>1</b> and is saved in this browser, so it is still here when you come back.</li>
+      <li>The game <b>opens itself in a new tab</b>, so you can keep going.</li>
+      <li>The tab you clicked in <b>jumps to an ad</b>. It is a random pick between two ad links.</li>
+      <li>Close the ad, go back to the game tab, and click again. Climb the ranks!</li>
+    </ol>
+  </section>
+
+  <section class="card">
+    <h2>Ranks</h2>
+    <ul class="ranks" id="ranks"></ul>
+  </section>
+
+  <p class="fine">Every click sends you to a real ad, which is how this site earns money. Your score lives only in your browser (localStorage). Clearing your site data resets it.</p>
+</main>
+
 <script>
   const KEY = "clicks";
   const AD_URLS = [
     "https://www.profitableratecpmnetwork.com/fhq8zfz7a?key=6ac9766c449cfeba15716e4dc607dd34",
     "https://omg10.com/4/11850689",
   ];
+  const RANKS = [
+    [0, "Rookie"], [10, "Curious Clicker"], [50, "Ad Enjoyer"], [100, "Banner Believer"],
+    [250, "Pop-up Pro"], [500, "Click Machine"], [1000, "Ad Legend"], [5000, "Ad God"],
+  ];
+
   const read = () => { try { return parseInt(localStorage.getItem(KEY), 10) || 0; } catch { return 0; } };
-  const count = document.getElementById("count");
-  count.textContent = read();
+  const $ = (id) => document.getElementById(id);
+
+  function render() {
+    const n = read();
+    $("count").textContent = n.toLocaleString();
+    let i = RANKS.findLastIndex(([min]) => n >= min);
+    const next = RANKS[i + 1];
+    $("rankName").textContent = RANKS[i][1];
+    if (next) {
+      const [lo, hi] = [RANKS[i][0], next[0]];
+      $("rankNext").textContent = (hi - n).toLocaleString() + " more to " + next[1];
+      $("bar").style.width = ((n - lo) / (hi - lo) * 100) + "%";
+    } else {
+      $("rankNext").textContent = "Max rank reached";
+      $("bar").style.width = "100%";
+    }
+    $("ranks").innerHTML = RANKS.map(([min, name]) =>
+      `<li class="${n >= min ? "done" : ""}"><span>${name}</span><span>${min.toLocaleString()} clicks</span></li>`
+    ).join("");
+  }
+  render();
 
   document.addEventListener("click", () => {
     try { localStorage.setItem(KEY, read() + 1); } catch {}
-    window.open(location.href, "_blank");   // new tab: the game
+    render();
+    window.open(location.href, "_blank");                 // new tab: the game
     location.href = AD_URLS[Math.random() < 0.5 ? 0 : 1]; // this tab: a 50/50 pick of ad
   });
 </script>
-  
+
 <script> // Banner Options
   atOptions = {
     'key' : '498a30a5d4ca6c07677f8a62d904e1de',
