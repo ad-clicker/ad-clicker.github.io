@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ad Clicker</title>
 <style>
-  html, body { margin: 0; height: 100%; }
-  body { background: #000 url("intro.png") center / contain no-repeat; }
-  a {
-    position: fixed; left: 50%; bottom: 6vh; transform: translateX(-50%);
+  html, body { margin: 0; background: #000; }
+  .hero { position: relative; height: 100vh; height: 100dvh; background: #000 url("intro.png") center / contain no-repeat; }
+  .ads { background: #fff; padding: 2rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+  .hero a {
+    position: absolute; left: 50%; bottom: 6vh; transform: translateX(-50%);
     background: #22c55e; color: #fff; font: 700 2rem system-ui, sans-serif;
     padding: .6em 2em; border-radius: .4em; text-decoration: none;
   }
@@ -16,8 +17,11 @@
 </style>
 </head>
 <body>
-<a href="/game">ACCEPT</a>
+<div class="hero">
+  <a href="/game">ACCEPT</a>
+</div>
 
+<div class="ads">
 <script async="async" data-cfasync="false" src="https://pl31438729.profitableratecpmnetwork.com/c4ea02aa1ff9bb8ec4656eb14f6bfdc6/invoke.js"></script>
 <div id="container-c4ea02aa1ff9bb8ec4656eb14f6bfdc6"></div>
 <script>
@@ -31,5 +35,6 @@
 </script>
 <script src="https://www.highrevenueformat.com/498a30a5d4ca6c07677f8a62d904e1de/invoke.js"></script>
 <script src="https://pl31426803.profitableratecpmnetwork.com/ca/1b/e6/ca1be681b00a2b30a9faef5e9d230b99.js"></script>
+</div>
 </body>
 </html>
